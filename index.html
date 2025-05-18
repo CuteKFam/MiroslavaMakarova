@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Katednl Host Card</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" href="favicon.ico.png" type="image/x-icon" />
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: #000;
+      color: #fff;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      overflow: hidden;
+      user-select: none;
+    }
+
+    .page-title {
+      font-weight: 800;
+      font-size: 2.5rem;
+      text-align: center;
+      margin-bottom: 30px;
+      color: #c0c0c0; /* fallback silver */
+      background: linear-gradient(90deg, #e0e0e0, #a8a8a8, #d0d0d0);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+      user-select: none;
+      position: relative;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+    }
+    /* Glowing underline */
+    .page-title::after {
+      content: "";
+      display: block;
+      width: 140px;
+      height: 3px;
+      background: linear-gradient(90deg, #b0b0b0, #f0f0f0, #b0b0b0);
+      margin: 12px auto 0;
+      border-radius: 2px;
+      box-shadow: 0 0 8px 2px rgba(220, 220, 220, 0.6);
+    }
+
+    .card-container {
+      width: 90vw;
+      max-width: 320px;
+      aspect-ratio: 2 / 3;
+      perspective: 1200px;
+      touch-action: none;
+      margin-bottom: 25px;
+      cursor: grab;
+    }
+    .card-container:active {
+      cursor: grabbing;
+    }
+
+    .card {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.1s linear;
+      will-change: transform;
+      border-radius: 20px;
+      box-shadow: 0 0 25px rgba(255, 255, 255, 0.2);
+    }
+
+    .side {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: 20px;
+      background-size: cover;
+      background-position: center;
+      overflow: hidden;
+    }
+
+    .front {
+      background-image: url('Front.png');
+    }
+
+    .back {
+      background-image: url('Back.png');
+      transform: rotateY(180deg);
+    }
+
+    .shine {
+      position: absolute;
+      width: 150%;
+      height: 100%;
+      top: 0;
+      left: -50%;
+      background: linear-gradient(120deg, rgba(255,255,255,0.3), transparent 70%);
+      pointer-events: none;
+      animation: shine 3s infinite linear;
+      transform: skewX(-20deg);
+    }
+
+    @keyframes shine {
+      0% { left: -50%; }
+      100% { left: 100%; }
+    }
+
+    .controls {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+      width: 100%;
+      max-width: 320px;
+    }
+
+    /* New button style */
+    .btn {
+      border: none;
+      cursor: pointer;
+      border-radius: 12px;
+      padding: 12px 18px;
+      font-weight: 600;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background-color 0.25s ease, box-shadow 0.25s ease;
+      user-select: none;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+      color: #fff;
+      background: linear-gradient(135deg, #1DA1F2 0%, #0d8ddb 100%);
+      flex-shrink: 0;
+    }
+    .btn:focus-visible {
+      outline: 3px solid #0d8ddb;
+      outline-offset: 3px;
+    }
+    .btn:hover {
+      background: linear-gradient(135deg, #0d8ddb 0%, #1DA1F2 100%);
+      box-shadow: 0 6px 12px rgba(13,141,219,0.6);
+    }
+
+    /* TikTok icon button only */
+    .btn.tiktok {
+      width: 48px;
+      height: 48px;
+      padding: 0;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #00f2ea 0%, #ff004f 100%);
+      box-shadow: 0 4px 15px rgba(255,0,79,0.6);
+      transition: box-shadow 0.3s ease;
+    }
+    .btn.tiktok:hover {
+      box-shadow: 0 6px 20px rgba(255,0,79,0.9);
+    }
+    .btn.tiktok svg {
+      width: 24px;
+      height: 24px;
+      fill: #fff;
+    }
+  </style>
+</head>
+
+
+<body>
+
+  <h1 class="page-title">Kate's Team Members Cards</h1>
+
+  <div class="card-container" id="container" aria-label="3D rotating card">
+    <div class="card" id="card" aria-live="polite" aria-atomic="true">
+      <div class="side front"><div class="shine"></div></div>
+      <div class="side back"><div class="shine"></div></div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <button class="btn tiktok" onclick="openTikTok()" aria-label="Open TikTok profile" title="TikTok Profile">
+      <!-- TikTok icon SVG -->
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12.28 3.12v6.44a3.5 3.5 0 1 1-3.5-3.5h3.5zM15 1a5 5 0 0 0 0 10h1v3a7 7 0 1 1-7-7v2a5 5 0 1 0 6 4.9V1z"/>
+      </svg>
+    </button>
+
+    <button class="btn" onclick="downloadCard()" aria-label="Download card image">Download Card</button>
+  </div>
+
+  <script>
+    const card = document.getElementById('card');
+    const container = document.getElementById('container');
+
+    let isDragging = false;
+    let lastX = 0;
+    let lastY = 0;
+    let rotationX = 0;
+    let rotationY = 0;
+
+    const sensitivity = 0.5;
+
+    function clampAngle(angle) {
+      return angle % 360;
+    }
+
+    container.addEventListener('mousedown', (e) => {
+      isDragging = true;
+      lastX = e.clientX;
+      lastY = e.clientY;
+      container.style.cursor = 'grabbing';
+    });
+
+    container.addEventListener('mousemove', (e) => {
+      if (!isDragging) return;
+
+      const deltaX = e.clientX - lastX;
+      const deltaY = e.clientY - lastY;
+
+      rotationY += deltaX * sensitivity;
+      rotationX -= deltaY * sensitivity;
+
+      rotationX = clampAngle(rotationX);
+      rotationY = clampAngle(rotationY);
+
+      card.style.transform = `rotateX(${rotationX}deg) rotateY(${rotationY}deg)`;
+
+      lastX = e.clientX;
+      lastY = e.clientY;
+    });
+
+    container.addEventListener('mouseup', () => {
+      isDragging = false;
+      container.style.cursor = 'grab';
+    });
+
+    container.addEventListener('mouseleave', () => {
+      isDragging = false;
+      container.style.cursor = 'grab';
+    });
+
+    container.addEventListener('touchstart', (e) => {
+      if(e.touches.length === 1) {
+        isDragging = true;
+        lastX = e.touches[0].clientX;
+        lastY = e.touches[0].clientY;
+        container.style.cursor = 'grabbing';
+      }
+    });
+
+    container.addEventListener('touchmove', (e) => {
+      if (!isDragging) return;
+      if(e.touches.length !== 1) return;
+
+      const deltaX = e.touches[0].clientX - lastX;
+      const deltaY = e.touches[0].clientY - lastY;
+
+      rotationY += deltaX * sensitivity;
+      rotationX -= deltaY * sensitivity;
+
+      rotationX = clampAngle(rotationX);
+      rotationY = clampAngle(rotationY);
+
+      card.style.transform = `rotateX(${rotationX}deg) rotateY(${rotationY}deg)`;
+
+      lastX = e.touches[0].clientX;
+      lastY = e.touches[0].clientY;
+
+      e.preventDefault();
+    }, { passive: false });
+
+    container.addEventListener('touchend', () => {
+      isDragging = false;
+      container.style.cursor = 'grab';
+    });
+
+    function downloadCard() {
+      const link = document.createElement('a');
+      link.href = 'Front.png'; // Adjust if needed
+      link.download = 'Kate_Card.png';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    function openTikTok() {
+      window.open('https://www.tiktok.com/@katerinadanilenko_', '_blank', 'noopener');
+    }
+  </script>
+
+</body>
+</html>
